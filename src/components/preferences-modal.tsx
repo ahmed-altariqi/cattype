@@ -17,18 +17,30 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
 
 export const PreferencesModal = () => {
   const { reset } = useTypingActions();
   const { changeTheme, changeWordCount, changeWordPopularity } =
     usePreferenceActions();
+  const { toast } = useToast();
 
   const handleThemeClick = (theme: ThemeName) => {
+    toast({
+      title: "Theme",
+      description: `Successfully set theme to ${theme}`,
+      duration: 2500,
+    });
     changeTheme(theme);
     reset();
   };
 
   const handleWordCountClick = (wordCount: WordCount) => {
+    toast({
+      title: "Word Count",
+      description: `Successfully set word count to ${wordCount}`,
+      duration: 2500,
+    });
     changeWordCount(wordCount);
     reset();
   };
@@ -36,6 +48,11 @@ export const PreferencesModal = () => {
   const handleWordPopularityClick = (
     wordPopularity: WordsPopularity
   ) => {
+    toast({
+      title: "Words Popularity",
+      description: `Successfully set words popularity to ${wordPopularity}`,
+      duration: 2500,
+    });
     changeWordPopularity(wordPopularity);
     reset();
   };
