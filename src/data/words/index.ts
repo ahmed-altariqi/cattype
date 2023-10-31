@@ -1,4 +1,4 @@
-import { WordCount } from "@/types";
+import { WordCount } from "@/types/typing-types";
 
 import { list } from "./words";
 
