@@ -132,6 +132,21 @@ export const PreferencesModal = () => {
                   }}
                 ></span>
               </Button>
+              <Button
+                className="flex items-center gap-2"
+                variant="cat"
+                onClick={() => handleThemeClick("burlywood")}
+              >
+                burlywood
+                <span
+                  className="h-2 w-2 rounded-full"
+                  style={{
+                    background: `hsl(${getThemePrimaryColor(
+                      "burlywood"
+                    )})`,
+                  }}
+                ></span>
+              </Button>
             </div>
           </div>
 

@@ -5,7 +5,8 @@ export type ThemeName =
   | "emerald"
   | "blue"
   | "indigo"
-  | "teal";
+  | "teal"
+  | "burlywood";
 
 export type Theme = {
   themeClassName: string;

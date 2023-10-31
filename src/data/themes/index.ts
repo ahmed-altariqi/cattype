@@ -21,6 +21,10 @@ export const themes = {
     themeClassName: "theme-indigo",
     primaryColor: "239, 100%, 76%",
   },
+  burlywood: {
+    themeClassName: "theme-devjood",
+    primaryColor: "34, 57%, 70%",
+  },
 };
 
 export const getThemeClassNameAndPrimaryColor = (name: ThemeName) => {

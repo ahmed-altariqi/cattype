@@ -75,6 +75,15 @@
     --errorColor: hsl(0, 100%, 72.9%);
   }
 
+  /* theme suggested by @DevJood on Twitter */
+  .theme-devjood {
+    --backgroundColor: hsl(176, 48%, 14%);
+    --mutedColor: hsla(219, 12%, 63%, 0.784);
+    --neutralColor: hsl(0, 0%, 100%);
+    --primaryColor: hsl(34, 57%, 70%);
+    --errorColor: hsl(0, 100%, 69.8%);
+  }
+
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
