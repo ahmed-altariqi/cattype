@@ -1,9 +1,30 @@
+import { cn } from "@/lib/utils";
+
+import { useStatus } from "@/stores/typing-store";
+import { useTheme } from "@/stores/preferences-store";
+
+import { Logo } from "@/components/logo";
+import { TypingArea } from "./components/typing-area";
+
 const App = () => {
+  const status = useStatus();
+  const { themeClassName } = useTheme();
+
   return (
-    <div>
-      <h1 className="text-8xl font-black text-emerald-400">
-        cat see cattype
-      </h1>
+    <div
+      className={cn(
+        "bg-cat-background text-cat-muted",
+        themeClassName
+      )}
+    >
+      <div className="max-w-7xl pt-20 flex flex-col p-10 md:px-40 min-h-screen text-2xl font-bold">
+        <div className="flex items-center justify-between">
+          <Logo />
+        </div>
+        <div className="pt-20">
+          {status === "done" ? "Statistics" : <TypingArea />}
+        </div>
+      </div>
     </div>
   );
 };
