@@ -171,7 +171,7 @@ export const PreferencesModal = () => {
           </div>
 
           <div className="space-y-4">
-            <h4>Word WordsPopularity</h4>
+            <h4>Word Popularity</h4>
             <div className="flex flex-wrap gap-1">
               <Button
                 className="flex items-center gap-2"
