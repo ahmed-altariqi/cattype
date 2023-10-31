@@ -27,4 +27,6 @@ export const getThemeClassNameAndPrimaryColor = (name: ThemeName) => {
   return themes[name];
 };
 
-export const getThemesNameAndPrimaryColor = () => {};
+export const getThemePrimaryColor = (name: ThemeName) => {
+  return themes[name].primaryColor;
+};

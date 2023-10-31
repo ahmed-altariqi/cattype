@@ -6,6 +6,7 @@ import { useTheme } from "@/stores/preferences-store";
 import { Logo } from "@/components/logo";
 import { TypingArea } from "@/components/typing-area";
 import { Statistics } from "@/components/statistics";
+import { PreferencesModal } from "@/components/preferences-modal";
 
 const App = () => {
   const status = useStatus();
@@ -21,6 +22,7 @@ const App = () => {
       <div className="max-w-7xl pt-20 flex flex-col p-10 md:px-40 min-h-screen text-2xl font-bold">
         <div className="flex items-center justify-between">
           <Logo />
+          <PreferencesModal />
         </div>
         <div className="pt-20">
           {status === "done" ? <Statistics /> : <TypingArea />}
