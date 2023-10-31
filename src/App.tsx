@@ -7,6 +7,7 @@ import { Logo } from "@/components/logo";
 import { TypingArea } from "@/components/typing-area";
 import { Statistics } from "@/components/statistics";
 import { PreferencesModal } from "@/components/preferences-modal";
+import { Toaster } from "@/components/ui/toaster";
 
 const App = () => {
   const status = useStatus();
@@ -28,6 +29,7 @@ const App = () => {
           {status === "done" ? <Statistics /> : <TypingArea />}
         </div>
       </div>
+      <Toaster />
     </div>
   );
 };
