@@ -4,7 +4,8 @@ import { useStatus } from "@/stores/typing-store";
 import { useTheme } from "@/stores/preferences-store";
 
 import { Logo } from "@/components/logo";
-import { TypingArea } from "./components/typing-area";
+import { TypingArea } from "@/components/typing-area";
+import { Statistics } from "@/components/statistics";
 
 const App = () => {
   const status = useStatus();
@@ -22,7 +23,7 @@ const App = () => {
           <Logo />
         </div>
         <div className="pt-20">
-          {status === "done" ? "Statistics" : <TypingArea />}
+          {status === "done" ? <Statistics /> : <TypingArea />}
         </div>
       </div>
     </div>
