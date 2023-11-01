@@ -1,11 +1,10 @@
-import { WordCount } from "@/types/typing-types";
+import { WordCount, WordsPopularity } from "@/types/typing-types";
 
 import { list } from "./words";
 
-type Popularity = 200 | 1000 | 5_000 | 10_000 | 20_000;
 type RandomizedWords = {
   wordCount?: WordCount;
-  popularity?: Popularity;
+  popularity?: WordsPopularity;
 };
 
 export const randomizedWords = ({
