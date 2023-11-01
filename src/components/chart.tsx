@@ -46,6 +46,14 @@ export const StatisticsChart = () => {
         },
       },
     },
+    scales: {
+      y: {
+        ticks: {
+          maxTicksLimit: 3,
+        },
+        beginAtZero: false,
+      },
+    },
   };
 
   const data: ChartData<"line"> = {
@@ -55,6 +63,7 @@ export const StatisticsChart = () => {
         data: chartPoints.map((point) => point.wpm),
         borderColor: `hsl(${primaryColor})`,
         backgroundColor: `hsl(${primaryColor})`,
+        tension: 0.3,
       },
     ],
   };
