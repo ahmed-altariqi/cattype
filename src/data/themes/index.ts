@@ -1,4 +1,4 @@
-import { ThemeName } from "@/types/preferences-types";
+export type ThemeName = keyof typeof themes;
 
 export const themes = {
   teal: {
@@ -24,6 +24,10 @@ export const themes = {
   burlywood: {
     themeClassName: "theme-devjood",
     primaryColor: "34, 57%, 70%",
+  },
+  cyan: {
+    themeClassName: "theme-cyan",
+    primaryColor: "180, 100%, 61.8%",
   },
 };
 

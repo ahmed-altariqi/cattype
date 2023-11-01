@@ -84,6 +84,14 @@
     --errorColor: hsl(0, 100%, 69.8%);
   }
 
+  .theme-cyan {
+    --backgroundColor: hsl(232, 100%, 1%);
+    --mutedColor: hsl(180, 7%, 35%);
+    --neutralColor: hsl(0, 0%, 100%);
+    --primaryColor: hsl(180, 100%, 61.8%);
+    --errorColor: hsl(0, 100%, 69.8%);
+  }
+
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;

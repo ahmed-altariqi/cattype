@@ -1,6 +1,6 @@
 import { Settings } from "lucide-react";
 
-import { ThemeName } from "@/types/preferences-types";
+import { ThemeName } from "@/data/themes";
 import { WordsPopularity, WordCount } from "@/types/typing-types";
 
 import { getThemePrimaryColor } from "@/data/themes";
@@ -160,6 +160,21 @@ export const PreferencesModal = () => {
                   style={{
                     background: `hsl(${getThemePrimaryColor(
                       "burlywood"
+                    )})`,
+                  }}
+                ></span>
+              </Button>
+              <Button
+                className="flex items-center gap-2"
+                variant="cat"
+                onClick={() => handleThemeClick("cyan")}
+              >
+                cyan
+                <span
+                  className="h-2 w-2 rounded-full"
+                  style={{
+                    background: `hsl(${getThemePrimaryColor(
+                      "cyan"
                     )})`,
                   }}
                 ></span>
