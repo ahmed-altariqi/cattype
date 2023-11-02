@@ -65,7 +65,7 @@ export const PreferencesModal = () => {
   const handleTextPositionClick = (textPosition: TextPosition) => {
     toast({
       title: "Text Position",
-      description: `Successfully set words popularity to ${textPosition}`,
+      description: `Successfully set text position to ${textPosition}`,
       duration: 2500,
     });
     changeTextPosition(textPosition);
