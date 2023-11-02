@@ -2,6 +2,7 @@ import { Settings } from "lucide-react";
 
 import { ThemeName } from "@/data/themes";
 import { WordsPopularity, WordCount } from "@/types/typing-types";
+import { TextPosition } from "@/types/preferences-types";
 
 import { getThemePrimaryColor } from "@/data/themes";
 
@@ -21,8 +22,12 @@ import { useToast } from "@/components/ui/use-toast";
 
 export const PreferencesModal = () => {
   const { reset } = useTypingActions();
-  const { changeTheme, changeWordCount, changeWordPopularity } =
-    usePreferenceActions();
+  const {
+    changeTheme,
+    changeWordCount,
+    changeWordPopularity,
+    changeTextPosition,
+  } = usePreferenceActions();
   const { toast } = useToast();
 
   const handleThemeClick = (theme: ThemeName) => {
@@ -56,6 +61,17 @@ export const PreferencesModal = () => {
     changeWordPopularity(wordPopularity);
     reset();
   };
+
+  const handleTextPositionClick = (textPosition: TextPosition) => {
+    toast({
+      title: "Text Position",
+      description: `Successfully set words popularity to ${textPosition}`,
+      duration: 2500,
+    });
+    changeTextPosition(textPosition);
+    reset();
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -255,6 +271,27 @@ export const PreferencesModal = () => {
                 onClick={() => handleWordPopularityClick(20000)}
               >
                 20K words
+              </Button>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <h4>Text Position</h4>
+            <div className="flex flex-wrap gap-1">
+              <Button
+                className="flex items-center gap-2"
+                variant="cat"
+                onClick={() => handleTextPositionClick("left")}
+              >
+                left
+              </Button>
+
+              <Button
+                className="flex items-center gap-2"
+                variant="cat"
+                onClick={() => handleTextPositionClick("center")}
+              >
+                center
               </Button>
             </div>
           </div>

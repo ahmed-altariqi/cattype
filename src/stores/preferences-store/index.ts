@@ -19,6 +19,7 @@ export const usePreferenceStore = create<
         themeClassName: "theme-teal",
         primaryColor: "171, 77%, 64%",
       },
+      textPosition: "left",
       actions: {
         changeWordCount: (wordCount) => {
           set({ wordCount });
@@ -29,6 +30,9 @@ export const usePreferenceStore = create<
         changeTheme: (name) => {
           set({ theme: getThemeClassNameAndPrimaryColor(name) });
         },
+        changeTextPosition: (textPosition) => {
+          set({ textPosition });
+        },
       },
     }),
     {
@@ -37,6 +41,7 @@ export const usePreferenceStore = create<
         wordCount: state.wordCount,
         popularity: state.popularity,
         theme: state.theme,
+        textPosition: state.textPosition,
       }),
     }
   )
@@ -49,3 +54,5 @@ export const useWordsPopularity = () =>
 export const useTheme = () => usePreferenceStore((s) => s.theme);
 export const usePreferenceActions = () =>
   usePreferenceStore((s) => s.actions);
+export const useTextPosition = () =>
+  usePreferenceStore((s) => s.textPosition);
