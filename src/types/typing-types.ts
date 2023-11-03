@@ -1,11 +1,11 @@
 export type WordCount = 10 | 15 | 30 | 60;
 export type WordsPopularity = 200 | 1_000 | 5_000 | 10_000 | 20_000;
 export type Status = "idle" | "typing" | "done";
-export type ChartStatus = "INACTIVE" | "CORRECT" | "INCORRECT";
+export type CharStatus = "INACTIVE" | "CORRECT" | "INCORRECT";
 
 export type CharAndStatus = {
   char: string;
-  charStatus: ChartStatus;
+  charStatus: CharStatus;
 };
 
 export type WordListCharAndStatus = CharAndStatus[][];
