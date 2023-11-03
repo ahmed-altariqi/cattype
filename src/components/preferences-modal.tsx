@@ -20,6 +20,33 @@ import {
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 
+type Preferences =
+  | ThemeName
+  | WordCount
+  | WordsPopularity
+  | TextPosition;
+
+type ButtonConfig = {
+  text: string | number;
+  value: Preferences;
+};
+
+type ModalConfig = {
+  title: string;
+  clickHandler: (value: Preferences) => void;
+  toastDescription: string;
+  buttons: ButtonConfig[];
+};
+
+type UpdatePreferencesAndResetTypingStore = {
+  onClick: (value: Preferences) => void;
+  value: Preferences;
+  toastValue: {
+    title: string;
+    description: string;
+  };
+};
+
 export const PreferencesModal = () => {
   const { reset } = useTypingActions();
   const {
@@ -30,46 +57,151 @@ export const PreferencesModal = () => {
   } = usePreferenceActions();
   const { toast } = useToast();
 
-  const handleThemeClick = (theme: ThemeName) => {
-    toast({
-      title: "Theme",
-      description: `Successfully set theme to ${theme}`,
-      duration: 2500,
-    });
-    changeTheme(theme);
-    reset();
-  };
-
-  const handleWordCountClick = (wordCount: WordCount) => {
-    toast({
+  const modalConfig: Record<string, ModalConfig> = {
+    themes: {
+      title: "Themes",
+      clickHandler: changeTheme as (value: Preferences) => void,
+      toastDescription: "Successfully set themes to ",
+      buttons: [
+        {
+          text: "violet",
+          value: "violet",
+        },
+        {
+          text: "emerald",
+          value: "emerald",
+        },
+        {
+          text: "blue",
+          value: "blue",
+        },
+        {
+          text: "cyan",
+          value: "cyan",
+        },
+        {
+          text: "burlywood",
+          value: "burlywood",
+        },
+        {
+          text: "indigo",
+          value: "indigo",
+        },
+      ],
+    },
+    wordCount: {
       title: "Word Count",
-      description: `Successfully set word count to ${wordCount}`,
-      duration: 2500,
-    });
-    changeWordCount(wordCount);
-    reset();
-  };
-
-  const handleWordPopularityClick = (
-    wordPopularity: WordsPopularity
-  ) => {
-    toast({
+      clickHandler: changeWordCount as (value: Preferences) => void,
+      toastDescription: "Successfully set word count to ",
+      buttons: [
+        {
+          text: 10,
+          value: 10,
+        },
+        {
+          text: 15,
+          value: 15,
+        },
+        {
+          text: 30,
+          value: 30,
+        },
+        {
+          text: 60,
+          value: 60,
+        },
+      ],
+    },
+    wordPopularity: {
       title: "Words Popularity",
-      description: `Successfully set words popularity to ${wordPopularity}`,
-      duration: 2500,
-    });
-    changeWordPopularity(wordPopularity);
+      clickHandler: changeWordPopularity as (
+        value: Preferences
+      ) => void,
+      toastDescription: "Successfully set words popularity to ",
+      buttons: [
+        {
+          text: 200,
+          value: 200,
+        },
+        {
+          text: "1K",
+          value: 1_000,
+        },
+        {
+          text: "5K",
+          value: 5_000,
+        },
+        {
+          text: "10K",
+          value: 10_000,
+        },
+        {
+          text: "20K",
+          value: 20_000,
+        },
+      ],
+    },
+    textPosition: {
+      title: "Text Position",
+      clickHandler: changeTextPosition as (
+        value: Preferences
+      ) => void,
+      toastDescription: "Successfully set text to ",
+      buttons: [
+        { text: "left", value: "left" },
+        { text: "center", value: "center" },
+      ],
+    },
+  };
+
+  const updatePreferenceAndResetTypingStore = ({
+    onClick,
+    value,
+    toastValue,
+  }: UpdatePreferencesAndResetTypingStore) => {
+    toast({ duration: 2500, ...toastValue });
+    onClick(value);
     reset();
   };
 
-  const handleTextPositionClick = (textPosition: TextPosition) => {
-    toast({
-      title: "Text Position",
-      description: `Successfully set text position to ${textPosition}`,
-      duration: 2500,
-    });
-    changeTextPosition(textPosition);
-    reset();
+  const renderButtons = (config: ModalConfig) => {
+    const { title, clickHandler, toastDescription, buttons } = config;
+    return (
+      <div className="space-y-4">
+        <h4>{title}</h4>
+        <div className="flex flex-wrap gap-1">
+          {buttons.map(({ text, value }) => (
+            <Button
+              key={String(value)}
+              className="flex items-center gap-2"
+              variant="cat"
+              onClick={() =>
+                updatePreferenceAndResetTypingStore({
+                  value,
+                  onClick: clickHandler,
+                  toastValue: {
+                    title,
+                    description: `${toastDescription} ${value}`,
+                  },
+                })
+              }
+            >
+              {text}
+              {title === "Themes" && (
+                <span
+                  className="h-2 w-2 rounded-full"
+                  style={{
+                    background: `hsl(${getThemePrimaryColor(
+                      value as ThemeName
+                    )})`,
+                  }}
+                ></span>
+              )}
+            </Button>
+          ))}
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -87,214 +219,10 @@ export const PreferencesModal = () => {
           </DialogDescription>
         </DialogHeader>
         <div className="pb-10 flex flex-col gap-6 ">
-          <div className="space-y-4">
-            <h4>Themes</h4>
-            <div className="flex flex-wrap gap-1">
-              <Button
-                className="flex items-center gap-2"
-                variant="cat"
-                onClick={() => handleThemeClick("violet")}
-              >
-                violet
-                <span
-                  className="h-2 w-2 rounded-full"
-                  style={{
-                    background: `hsl(${getThemePrimaryColor(
-                      "violet"
-                    )})`,
-                  }}
-                ></span>
-              </Button>
-              <Button
-                className="flex items-center gap-2"
-                variant="cat"
-                onClick={() => handleThemeClick("teal")}
-              >
-                teal
-                <span
-                  className="h-2 w-2 rounded-full"
-                  style={{
-                    background: `hsl(${getThemePrimaryColor(
-                      "teal"
-                    )})`,
-                  }}
-                ></span>
-              </Button>
-              <Button
-                className="flex items-center gap-2"
-                variant="cat"
-                onClick={() => handleThemeClick("blue")}
-              >
-                blue
-                <span
-                  className="h-2 w-2 rounded-full"
-                  style={{
-                    background: `hsl(${getThemePrimaryColor(
-                      "blue"
-                    )})`,
-                  }}
-                ></span>
-              </Button>
-              <Button
-                className="flex items-center gap-2"
-                variant="cat"
-                onClick={() => handleThemeClick("emerald")}
-              >
-                emerald
-                <span
-                  className="h-2 w-2 rounded-full"
-                  style={{
-                    background: `hsl(${getThemePrimaryColor(
-                      "emerald"
-                    )})`,
-                  }}
-                ></span>
-              </Button>
-              <Button
-                className="flex items-center gap-2"
-                variant="cat"
-                onClick={() => handleThemeClick("indigo")}
-              >
-                indigo
-                <span
-                  className="h-2 w-2 rounded-full"
-                  style={{
-                    background: `hsl(${getThemePrimaryColor(
-                      "indigo"
-                    )})`,
-                  }}
-                ></span>
-              </Button>
-              <Button
-                className="flex items-center gap-2"
-                variant="cat"
-                onClick={() => handleThemeClick("burlywood")}
-              >
-                burlywood
-                <span
-                  className="h-2 w-2 rounded-full"
-                  style={{
-                    background: `hsl(${getThemePrimaryColor(
-                      "burlywood"
-                    )})`,
-                  }}
-                ></span>
-              </Button>
-              <Button
-                className="flex items-center gap-2"
-                variant="cat"
-                onClick={() => handleThemeClick("cyan")}
-              >
-                cyan
-                <span
-                  className="h-2 w-2 rounded-full"
-                  style={{
-                    background: `hsl(${getThemePrimaryColor(
-                      "cyan"
-                    )})`,
-                  }}
-                ></span>
-              </Button>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <h4>Word count</h4>
-            <div className="flex flex-wrap gap-1">
-              <Button
-                className="flex items-center gap-2"
-                variant="cat"
-                onClick={() => handleWordCountClick(10)}
-              >
-                10
-              </Button>
-
-              <Button
-                className="flex items-center gap-2"
-                variant="cat"
-                onClick={() => handleWordCountClick(15)}
-              >
-                15
-              </Button>
-              <Button
-                className="flex items-center gap-2"
-                variant="cat"
-                onClick={() => handleWordCountClick(30)}
-              >
-                30
-              </Button>
-              <Button
-                className="flex items-center gap-2"
-                variant="cat"
-                onClick={() => handleWordCountClick(60)}
-              >
-                60
-              </Button>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <h4>Word Popularity</h4>
-            <div className="flex flex-wrap gap-1">
-              <Button
-                className="flex items-center gap-2"
-                variant="cat"
-                onClick={() => handleWordPopularityClick(200)}
-              >
-                200 words
-              </Button>
-
-              <Button
-                className="flex items-center gap-2"
-                variant="cat"
-                onClick={() => handleWordPopularityClick(1000)}
-              >
-                1K words
-              </Button>
-              <Button
-                className="flex items-center gap-2"
-                variant="cat"
-                onClick={() => handleWordPopularityClick(5000)}
-              >
-                5K words
-              </Button>
-              <Button
-                className="flex items-center gap-2"
-                variant="cat"
-                onClick={() => handleWordPopularityClick(10000)}
-              >
-                10K words
-              </Button>
-              <Button
-                className="flex items-center gap-2"
-                variant="cat"
-                onClick={() => handleWordPopularityClick(20000)}
-              >
-                20K words
-              </Button>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <h4>Text Position</h4>
-            <div className="flex flex-wrap gap-1">
-              <Button
-                className="flex items-center gap-2"
-                variant="cat"
-                onClick={() => handleTextPositionClick("left")}
-              >
-                left
-              </Button>
-
-              <Button
-                className="flex items-center gap-2"
-                variant="cat"
-                onClick={() => handleTextPositionClick("center")}
-              >
-                center
-              </Button>
-            </div>
-          </div>
+          {renderButtons(modalConfig.themes)}
+          {renderButtons(modalConfig.wordCount)}
+          {renderButtons(modalConfig.wordPopularity)}
+          {renderButtons(modalConfig.textPosition)}
         </div>
       </DialogContent>
     </Dialog>
