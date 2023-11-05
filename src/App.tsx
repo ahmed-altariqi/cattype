@@ -16,20 +16,22 @@ const App = () => {
   return (
     <div
       className={cn(
-        "bg-cat-background text-cat-muted",
+        "bg-cat-background text-cat-muted overflow-hidden",
         themeClassName
       )}
     >
-      <div className="max-w-7xl pt-20 flex flex-col p-10 md:px-40 min-h-screen text-2xl font-bold">
-        <div className="flex items-center justify-between">
-          <Logo />
-          <PreferencesModal />
+      <div className="container pt-20 h-screen">
+        <div className="max-w-7xl flex flex-col md:px-40 min-h-screen text-2xl font-bold">
+          <div className="flex items-center justify-between">
+            <Logo />
+            <PreferencesModal />
+          </div>
+          <div className="pt-20">
+            {status === "done" ? <Statistics /> : <TypingArea />}
+          </div>
         </div>
-        <div className="pt-20">
-          {status === "done" ? <Statistics /> : <TypingArea />}
-        </div>
+        <Toaster />
       </div>
-      <Toaster />
     </div>
   );
 };
