@@ -9,9 +9,40 @@ import { Statistics } from "@/components/statistics";
 import { PreferencesModal } from "@/components/preferences-modal";
 import { Toaster } from "@/components/ui/toaster";
 
+import { auth } from "@/firebase/firebase";
+import { useEffect } from "react";
+import { signInAnonymously } from "firebase/auth";
+
 const App = () => {
   const status = useStatus();
   const { themeClassName } = useTheme();
+
+  useEffect(() => {
+    // Sign in anonymously when the app loads
+    signInAnonymously(auth)
+      .then(() => {
+        console.log("User signed in anonymously");
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // Handle Errors here.
+        console.error("Anonymous auth error:", errorCode, errorMessage);
+      });
+
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        // User is signed in.
+        console.log("User is signed in:", user);
+      } else {
+        // User is signed out.
+        console.log("User is signed out");
+      }
+    });
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, []);
 
   return (
     <div
