@@ -10,6 +10,8 @@ import {
 } from "@/stores/typing-store";
 
 import { StatisticsChart } from "@/components/chart";
+import Leaderboard from "./leaderboard";
+import { writeToLeaderboard } from "@/firebase/firebase";
 
 export const Statistics = () => {
   const accuracy = useAccuracy();
@@ -26,7 +28,7 @@ export const Statistics = () => {
     };
 
     window.addEventListener("keydown", keydown);
-
+    writeToLeaderboard(wpm ?? 0, accuracy ?? 0, duration ?? 0, 10, "test")
     return () => window.removeEventListener("keydown", keydown);
   }, [reset]);
 
@@ -73,18 +75,7 @@ export const Statistics = () => {
       </div>
 
       <div className="row-start-3 col-span-full flex items-center justify-center">
-        <p
-          className={cn(
-            "text-center text-muted-foreground flex items-center gap-x-2 opacity-50 text-sm",
-            "text-textColor"
-          )}
-        >
-          <span>Click </span>
-          <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
-            <span className="text-xs">Enter</span>
-          </kbd>{" "}
-          <span>to go the next test.</span>
-        </p>
+        <Leaderboard />
       </div>
     </div>
   );
