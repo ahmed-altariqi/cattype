@@ -19,6 +19,7 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 async function writeToLeaderboard(
+  user: string,
   wordsPerMin: number,
   accuracy: number,
   timeTaken: number,
@@ -28,6 +29,7 @@ async function writeToLeaderboard(
   try {
     const leaderboardRef = collection(db, "leaderboard");
     const data = {
+      user,
       wordsPerMin,
       accuracy,
       timeTaken,

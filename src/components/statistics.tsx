@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 
 import {
   useAccuracy,
+  useActiveWordIndex,
   useDuration,
   useTypingActions,
   useWPM,
@@ -12,23 +13,47 @@ import {
 import { StatisticsChart } from "@/components/chart";
 import Leaderboard from "./leaderboard";
 import { writeToLeaderboard } from "@/firebase/firebase";
+import { auth } from "@/firebase/firebase";
+import { useWordsPopularity } from "@/stores/preferences-store";
 
+// Inside a React component
 export const Statistics = () => {
   const accuracy = useAccuracy();
   const wpm = useWPM();
   const duration = useDuration();
+  const wordCount = useActiveWordIndex();
+  const popularity = useWordsPopularity();
 
   const { reset } = useTypingActions();
 
   useEffect(() => {
     const keydown = (e: KeyboardEvent) => {
       if (e.key === "Enter") {
-        reset();
+        writeToLeaderboard(
+          userId || "",
+          Math.floor(Math.random() * 50),
+          Math.floor(Math.random() * 100),
+          Math.floor(Math.random() * 50),
+          wordCount + 1,
+          popularity.toString()
+        );
       }
     };
 
     window.addEventListener("keydown", keydown);
-    writeToLeaderboard(wpm ?? 0, accuracy ?? 0, duration ?? 0, 10, "test")
+
+    // ...
+
+    const userId = auth.currentUser?.uid;
+
+    writeToLeaderboard(
+      userId || "",
+      wpm ?? 0,
+      accuracy ?? 0,
+      duration ?? 0,
+      wordCount + 1,
+      popularity.toString()
+    );
     return () => window.removeEventListener("keydown", keydown);
   }, [reset]);
 
@@ -38,32 +63,20 @@ export const Statistics = () => {
         <div className="flex lg:flex-col gap-2 ">
           <span className="flex flex-col">
             <span className="text-2xl">wpm</span>
-            <span
-              className={cn(
-                "text-3xl lg:text-5xl",
-                "text-cat-primary"
-              )}
-            >
+            <span className={cn("text-3xl lg:text-5xl", "text-cat-primary")}>
               {wpm}
             </span>
           </span>
           <span className="flex flex-col">
             <span className="text-2xl">acc</span>
-            <span
-              className={cn("text-3xl lg:text-5xl text-cat-primary")}
-            >
+            <span className={cn("text-3xl lg:text-5xl text-cat-primary")}>
               {accuracy}%
             </span>
           </span>
 
           <span className="flex flex-col">
             <span className="text-2xl">time</span>
-            <span
-              className={cn(
-                "text-3xl lg:text-5xl",
-                "text-cat-primary"
-              )}
-            >
+            <span className={cn("text-3xl lg:text-5xl", "text-cat-primary")}>
               {duration}s
             </span>
           </span>
