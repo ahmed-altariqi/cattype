@@ -42,8 +42,6 @@ export const Statistics = () => {
 
     window.addEventListener("keydown", keydown);
 
-    // ...
-
     const userId = auth.currentUser?.uid;
 
     writeToLeaderboard(

@@ -1,16 +1,29 @@
 import { useEffect, useState } from "react";
 import { readFromLeaderboard } from "@/firebase/firebase";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { cn } from "@/lib/utils";
 
 interface LeaderboardItem {
+  uesr: string;
   wordCount: number;
   accuracy: number;
-  WordsPopularity: number; // Assuming WordsPopularity is a numeric value representing difficulty
+  WordsPopularity: number;
   wordsPerMin: number;
   timeTaken: number;
 }
 
 function Leaderboard() {
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardItem[]>([]);
+  const [sortColumn, setSortColumn] = useState<string>("");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,39 +34,133 @@ function Leaderboard() {
     fetchData();
   }, []);
 
-  // Calculate score based on WPM, accuracy, and words popularity
   const calculateScore = (item: LeaderboardItem) => {
     const baseScore = item.wordsPerMin * (item.accuracy / 100);
-    // Adjust the score by the inverse of words popularity assuming lower popularity means higher difficulty
     const difficultyAdjustment = 1000 / item.WordsPopularity;
     return baseScore * difficultyAdjustment;
   };
 
+  const handleSort = (column: string) => {
+    if (sortColumn === column) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortColumn(column);
+      setSortDirection("asc");
+    }
+  };
+
   const sortedData = leaderboardData
-    .filter(item => item.wordsPerMin && item.accuracy) // Filter out items with null or empty values
-    .map(item => ({
+    .filter((item) => item.wordsPerMin && item.accuracy)
+    .map((item) => ({
       ...item,
-      score: calculateScore(item), // Calculate adjusted score
+      score: calculateScore(item),
     }))
-    .sort((a, b) => b.score - a.score); // Sort by the calculated score
+    .sort((a, b) => {
+      if (sortColumn === "wordsPerMin") {
+        return sortDirection === "asc"
+          ? a.wordsPerMin - b.wordsPerMin
+          : b.wordsPerMin - a.wordsPerMin;
+      } else if (sortColumn === "accuracy") {
+        return sortDirection === "asc"
+          ? a.accuracy - b.accuracy
+          : b.accuracy - a.accuracy;
+      } else if (sortColumn === "timeTaken") {
+        return sortDirection === "asc"
+          ? a.timeTaken - b.timeTaken
+          : b.timeTaken - a.timeTaken;
+      } else if (sortColumn === "wordCount") {
+        return sortDirection === "asc"
+          ? a.wordCount - b.wordCount
+          : b.wordCount - a.wordCount;
+      } else if (sortColumn === "WordsPopularity") {
+        return sortDirection === "asc"
+          ? a.WordsPopularity - b.WordsPopularity
+          : b.WordsPopularity - a.WordsPopularity;
+      } else if (sortColumn === "score") {
+        return sortDirection === "asc" ? a.score - b.score : b.score - a.score;
+      } else {
+        return 0;
+      }
+    });
 
   return (
-    <div className="flex flex-col items-center">
-      <h1 className="text-center font-black text-4xl py-4 text-white">
-        Leaderboard
-      </h1>
-      <ul className="items-center">
-        {sortedData.map((item, index) => (
-          <li key={index} className="flex flex-1 gap-6 py-3 text-center">
-            <p>WPM: {item.wordsPerMin}</p>
-            <p>Accuracy: {item.accuracy}%</p>
-            <p>Time: {item.timeTaken}s</p>
-            <p>Count: {item.wordCount}</p>
-            <p>Words Popularity: {item.WordsPopularity}</p>
-            <p>Score: {item.score.toFixed(0)} pts</p>
-          </li>
-        ))}
-      </ul>
+    <div className="flex flex-col py-5">
+      <h1 className={cn("text-left font-black text-5xl py-6", "text-cat-primary")}>Leaderboard</h1>
+      <Table className="text-xl">
+        <TableCaption>
+          New high scores will update your existing record.
+        </TableCaption>
+        <TableHeader className="">
+          <TableRow>
+            <TableHead
+              className="w-[550px] "
+              onClick={() => handleSort("wordsPerMin")}
+            >
+              WPM{" "}
+              {sortColumn === "wordsPerMin" && (
+                <span>{sortDirection === "asc" ? "▼" : "▲"}</span>
+              )}
+            </TableHead>
+            <TableHead
+              className="w-[550px] "
+              onClick={() => handleSort("accuracy")}
+            >
+              Accuracy{" "}
+              {sortColumn === "accuracy" && (
+                <span>{sortDirection === "asc" ? "▼" : "▲"}</span>
+              )}
+            </TableHead>
+            <TableHead
+              className="w-[550px] "
+              onClick={() => handleSort("timeTaken")}
+            >
+              Time{" "}
+              {sortColumn === "timeTaken" && (
+                <span>{sortDirection === "asc" ? "▼" : "▲"}</span>
+              )}
+            </TableHead>
+            <TableHead
+              className="w-[550px] "
+              onClick={() => handleSort("wordCount")}
+            >
+              Words{" "}
+              {sortColumn === "wordCount" && (
+                <span>{sortDirection === "asc" ? "▼" : "▲"}</span>
+              )}
+            </TableHead>
+            <TableHead
+              className="w-[550px] "
+              onClick={() => handleSort("WordsPopularity")}
+            >
+              Popularity{" "}
+              {sortColumn === "WordsPopularity" && (
+                <span>{sortDirection === "asc" ? "▼" : "▲"}</span>
+              )}
+            </TableHead>
+            <TableHead
+              className="w-[550px] "
+              onClick={() => handleSort("score")}
+            >
+              Score{" "}
+              {sortColumn === "score" && (
+                <span>{sortDirection === "asc" ? "▼" : "▲"}</span>
+              )}
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {sortedData.map((item, index) => (
+            <TableRow key={index}>
+              <TableCell>{item.wordsPerMin}</TableCell>
+              <TableCell>{item.accuracy}%</TableCell>
+              <TableCell>{item.timeTaken}s</TableCell>
+              <TableCell>{item.wordCount}</TableCell>
+              <TableCell>{item.WordsPopularity}</TableCell>
+              <TableCell>{item.score.toFixed(0)} pts</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </div>
   );
 }

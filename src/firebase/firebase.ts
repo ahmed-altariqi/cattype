@@ -1,6 +1,12 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore, collection, addDoc } from "firebase/firestore"; // Import the necessary functions
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  doc,
+  setDoc,
+} from "firebase/firestore"; // Import the necessary functions
 import { getDocs } from "firebase/firestore"; // Import the getDocs function
 
 const firebaseConfig = {
@@ -42,6 +48,31 @@ async function writeToLeaderboard(
     console.error("Error writing data to leaderboard:", error);
   }
 }
+async function updateLeaderboard(
+  user: string,
+  wordsPerMin: number,
+  accuracy: number,
+  timeTaken: number,
+  wordCount: number,
+  WordsPopularity: string
+) {
+  try {
+    const leaderboardRef = collection(db, "leaderboard");
+    const data = {
+      user,
+      wordsPerMin,
+      accuracy,
+      timeTaken,
+      wordCount,
+      WordsPopularity,
+    };
+    await setDoc(doc(leaderboardRef, "leaderboard"), data, { merge: true });
+    console.log("Data updated in leaderboard successfully!");
+  } catch (error) {
+    console.error("Error updating data in leaderboard:", error);
+  }
+}
+
 async function readFromLeaderboard() {
   try {
     const leaderboardRef = collection(db, "leaderboard");
@@ -57,4 +88,4 @@ async function readFromLeaderboard() {
   }
 }
 
-export { app, auth, db, writeToLeaderboard, readFromLeaderboard };
+export { app, auth, db, writeToLeaderboard, readFromLeaderboard, updateLeaderboard };
