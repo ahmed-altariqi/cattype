@@ -16,7 +16,6 @@ import { writeToLeaderboard } from "@/firebase/firebase";
 import { auth } from "@/firebase/firebase";
 import { useWordsPopularity } from "@/stores/preferences-store";
 
-// Inside a React component
 export const Statistics = () => {
   const accuracy = useAccuracy();
   const wpm = useWPM();
@@ -29,18 +28,10 @@ export const Statistics = () => {
   useEffect(() => {
     const keydown = (e: KeyboardEvent) => {
       if (e.key === "Enter") {
-        writeToLeaderboard(
-          userId || "",
-          Math.floor(Math.random() * 50),
-          Math.floor(Math.random() * 100),
-          Math.floor(Math.random() * 50),
-          wordCount + 1,
-          popularity.toString()
-        );
+        reset();
       }
     };
 
-    window.addEventListener("keydown", keydown);
 
     const userId = auth.currentUser?.uid;
 
@@ -52,6 +43,8 @@ export const Statistics = () => {
       wordCount + 1,
       popularity.toString()
     );
+
+    window.addEventListener("keydown", keydown);
     return () => window.removeEventListener("keydown", keydown);
   }, [reset]);
 
@@ -85,7 +78,19 @@ export const Statistics = () => {
         <StatisticsChart />
       </div>
 
-      <div className="row-start-3 col-span-full flex items-center justify-center">
+      <div className="row-start-3 col-span-full items-center justify-center">
+        <p
+          className={cn(
+            "justify-center text-center text-muted-foreground flex items-center gap-x-2 opacity-50 text-md",
+            "text-textColor"
+          )}
+        >
+          <span>Click </span>
+          <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
+            <span className="text-xs">Enter</span>
+          </kbd>{" "}
+          <span>to go the next test.</span>
+        </p>
         <Leaderboard />
       </div>
     </div>

@@ -50,3 +50,20 @@ export const calculateElapsedSeconds = ({
   if (!start) return 0;
   return Math.round((end - start) / 1000);
 };
+
+export const calculateScore = (item: any) => {
+  const baseScore = item.wordsPerMin * (item.accuracy / 100);
+  const difficultyAdjustment = 1000 / item.WordsPopularity;
+  return baseScore * difficultyAdjustment;
+};
+
+export function getSortFunction(sortColumn: string, sortDirection: string) {
+  return (a: any, b: any) => {
+    if (sortColumn in a && sortColumn in b) {
+      return sortDirection === "asc"
+        ? a[sortColumn] - b[sortColumn]
+        : b[sortColumn] - a[sortColumn];
+    }
+    return 0;
+  };
+}
