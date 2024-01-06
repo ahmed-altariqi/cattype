@@ -52,6 +52,14 @@ export const calculateElapsedSeconds = ({
 };
 
 export const calculateScore = (item: any) => {
+  if (typeof item.wordsPerMin !== "number" || typeof item.accuracy !== "number" || typeof item.WordsPopularity !== "number") {
+    return 0; // or some other default value
+  }
+
+  if (item.WordsPopularity <= 0) {
+    return 0; // Prevent division by zero or negative popularity
+  }
+
   const baseScore = item.wordsPerMin * (item.accuracy / 100);
   const difficultyAdjustment = 1000 / item.WordsPopularity;
   return baseScore * difficultyAdjustment;

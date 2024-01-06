@@ -1,27 +1,31 @@
 import { cn } from "@/lib/utils";
+import { useState } from "react";
 
-import { useStatus } from "@/stores/typing-store";
 import { useTheme } from "@/stores/preferences-store";
+import { useStatus } from "@/stores/typing-store";
 
 import { Logo } from "@/components/logo";
-import { TypingArea } from "@/components/typing-area";
-import { Statistics } from "@/components/statistics";
 import { PreferencesModal } from "@/components/preferences-modal";
+import { Statistics } from "@/components/statistics";
+import { TypingArea } from "@/components/typing-area";
 import { Toaster } from "@/components/ui/toaster";
 
 import { auth } from "@/firebase/firebase";
-import { useEffect } from "react";
 import { signInAnonymously } from "firebase/auth";
+import { useEffect } from "react";
 
-//TODO : Resize Page, 
+
 const App = () => {
   const status = useStatus();
   const { themeClassName } = useTheme();
+  const [userID, setUserID] = useState("");
 
   useEffect(() => {
     signInAnonymously(auth)
-      .then(() => {
+      .then((userCredential) => {
+        const user = userCredential.user;
         console.log("User signed in anonymously");
+        setUserID(user.uid);
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -31,9 +35,11 @@ const App = () => {
 
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        console.log("User is signed in:", user);
+        setUserID(user.uid);
+        console.log("User is signed in:", userID);
       } else {
         console.log("User is signed out");
+        setUserID("");
       }
     });
 
@@ -41,27 +47,24 @@ const App = () => {
   }, []);
 
   return (
-    <div>
-      <div 
-        className={cn(
-          "bg-cat-background text-cat-muted overflow-show",
-          themeClassName
-        )}
-      >
-        <div className="container pt-20 h-screen">
+      <div className={cn("bg-cat-background text-cat-muted overflow-hidden", themeClassName)}>
+        <div className="container pt-10 h-screen">
           <div className="max-w-7xl flex flex-col md:px-40 min-h-screen text-2xl font-bold">
             <div className="flex items-center justify-between">
               <Logo />
               <PreferencesModal />
             </div>
-            <div className="pt-20">
-              {status === "done" ? <Statistics /> : <TypingArea />}
+            <div className="pt-10">
+              {status === "done" ? (
+                <Statistics userID={userID} />
+              ) : (
+                <TypingArea />
+              )}
             </div>
           </div>
           <Toaster />
         </div>
       </div>
-    </div>
   );
 };
 

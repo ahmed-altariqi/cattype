@@ -6,8 +6,8 @@ import {
   addDoc,
   doc,
   setDoc,
-} from "firebase/firestore"; // Import the necessary functions
-import { getDocs } from "firebase/firestore"; // Import the getDocs function
+} from "firebase/firestore"; 
+import { getDocs } from "firebase/firestore"; 
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_API_KEY,
@@ -73,13 +73,15 @@ async function updateLeaderboard(
   }
 }
 
-async function readFromLeaderboard() {
+async function readFromLeaderboard(userID: string) {
   try {
     const leaderboardRef = collection(db, "leaderboard");
     const snapshot = await getDocs(leaderboardRef);
     const leaderboardData: object[] = [];
     snapshot.forEach((doc) => {
-      leaderboardData.push(doc.data());
+      const data = doc.data();
+      data.userID = userID;
+      leaderboardData.push(data);
     });
     return leaderboardData;
   } catch (error) {
@@ -87,5 +89,7 @@ async function readFromLeaderboard() {
     return [];
   }
 }
+
+// async function getUserFromLeaderboard
 
 export { app, auth, db, writeToLeaderboard, readFromLeaderboard, updateLeaderboard };

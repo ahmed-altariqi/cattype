@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 
 import { cn } from "@/lib/utils";
-
 import {
   useAccuracy,
   useActiveWordIndex,
@@ -9,14 +8,19 @@ import {
   useTypingActions,
   useWPM,
 } from "@/stores/typing-store";
-
 import { StatisticsChart } from "@/components/chart";
 import Leaderboard from "./leaderboard";
 import { writeToLeaderboard } from "@/firebase/firebase";
 import { auth } from "@/firebase/firebase";
 import { useWordsPopularity } from "@/stores/preferences-store";
 
-export const Statistics = () => {
+  //TODO : remove uploading on refresh/use update instead of write
+
+interface StatisticsProps {
+  userID: string;
+}
+
+export const Statistics = ({ userID }: StatisticsProps) => {
   const accuracy = useAccuracy();
   const wpm = useWPM();
   const duration = useDuration();
@@ -31,7 +35,6 @@ export const Statistics = () => {
         reset();
       }
     };
-
 
     const userId = auth.currentUser?.uid;
 
@@ -49,7 +52,7 @@ export const Statistics = () => {
   }, [reset]);
 
   return (
-    <div className="flex flex-col lg:grid grid-cols-12 grid-rows-12  gap-6">
+    <div className="flex flex-col lg:grid grid-cols-12 grid-rows-12 gap-6">
       <div className="flex flex-col gap-10 row-span-10 col-span-2 ">
         <div className="flex lg:flex-col gap-2 ">
           <span className="flex flex-col">
@@ -81,7 +84,7 @@ export const Statistics = () => {
       <div className="row-start-3 col-span-full items-center justify-center">
         <p
           className={cn(
-            "justify-center text-center text-muted-foreground flex items-center gap-x-2 opacity-50 text-md",
+            "justify-center text-center text-muted-foreground flex items-center gap-x-2 opacity-50 text-sm",
             "text-textColor"
           )}
         >
@@ -91,7 +94,7 @@ export const Statistics = () => {
           </kbd>{" "}
           <span>to go the next test.</span>
         </p>
-        <Leaderboard />
+        <Leaderboard userID={userID as any} />
       </div>
     </div>
   );
