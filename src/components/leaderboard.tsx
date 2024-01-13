@@ -11,7 +11,9 @@ import { calculateScore, getSortFunction } from "@/lib/math";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { ScrollArea } from "./ui/scroll-area";
+import '../index.css';
 
+// TODO : hide scroll bar
 interface LeaderboardItem {
   user: string;
   wordCount: number;
@@ -36,7 +38,6 @@ function Leaderboard({ userID }: LeaderboardProps) {
       setLeaderboardData(data as LeaderboardItem[]);
       setIsLoading(false);
     };
-
     fetchData();
   }, [userID]);
 
@@ -56,21 +57,20 @@ function Leaderboard({ userID }: LeaderboardProps) {
       score: calculateScore(item),
     }))
     .sort(getSortFunction(sortColumn, sortDirection));
-
+    
   return (
     <div className="flex flex-col py-5">
       <h1
         className={cn("text-left font-black text-4xl pt-6", "text-cat-primary")}
       >
         Leaderboard
-        
       </h1><p className="text-left text-sm py-2">
         New high scores will update your existing record.
         </p>
       {isLoading ? (
         <p className="text-center py-5">Loading...</p>
       ) : (
-        <ScrollArea className="rounded-md whitespace-nowrap ">
+        <ScrollArea className="rounded-md whitespace-nowrap">
           <div className="max-h-[19.5rem] overflow-y-scroll">
             <Table className="">
               <TableHeader>

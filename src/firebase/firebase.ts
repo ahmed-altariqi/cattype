@@ -49,7 +49,7 @@ async function writeToLeaderboard(
   }
 }
 async function updateLeaderboard(
-  user: string,
+  userID: string,
   wordsPerMin: number,
   accuracy: number,
   timeTaken: number,
@@ -59,14 +59,14 @@ async function updateLeaderboard(
   try {
     const leaderboardRef = collection(db, "leaderboard");
     const data = {
-      user,
+      user: userID,
       wordsPerMin,
       accuracy,
       timeTaken,
       wordCount,
       WordsPopularity,
     };
-    await setDoc(doc(leaderboardRef, "leaderboard"), data, { merge: true });
+    await setDoc(doc(leaderboardRef, userID), data, { merge: true });
     console.log("Data updated in leaderboard successfully!");
   } catch (error) {
     console.error("Error updating data in leaderboard:", error);
