@@ -46,14 +46,13 @@ export const TypingArea = () => {
     <div
       className={cn(
         "pt-20 flex",
-        textPosition === "center" && "justify-center"
+        textPosition === "center" && "justify-center",
       )}
     >
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <p>
-            <span>{activeWordIndex + 1}</span>/
-            <span>{words?.length}</span>
+            <span>{activeWordIndex + 1}</span>/<span>{words?.length}</span>
           </p>
         </div>
         <div className="flex flex-wrap items-start content-start gap-2">

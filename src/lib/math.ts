@@ -7,14 +7,11 @@ export const calculateAccuracy = ({
   words,
   mistakesCount,
 }: CalculateAccuracy) => {
-  const totalCharacters = words.reduce(
-    (acc, word) => acc + word.length,
-    0
-  );
+  const totalCharacters = words.reduce((acc, word) => acc + word.length, 0);
 
   const correctCharacters = totalCharacters - mistakesCount;
   const accuracyPercentage = Math.round(
-    (correctCharacters / totalCharacters) * 100
+    (correctCharacters / totalCharacters) * 100,
   );
 
   return accuracyPercentage > 0 ? accuracyPercentage : 0;
@@ -43,10 +40,40 @@ type CalculateTime = {
   end: number;
 };
 
-export const calculateElapsedSeconds = ({
-  start,
-  end,
-}: CalculateTime) => {
+export const calculateElapsedSeconds = ({ start, end }: CalculateTime) => {
   if (!start) return 0;
   return Math.round((end - start) / 1000);
 };
+
+export const calculateScore = (
+  wpm: any,
+  accuracy: any,
+  WordsPopularity: any,
+) => {
+  if (
+    typeof wpm !== "number" ||
+    typeof accuracy !== "number" ||
+    typeof WordsPopularity !== "number"
+  ) {
+    return 0; // or some other default value
+  }
+
+  if (wpm <= 0) {
+    return 0; // Prevent division by zero or negative popularity
+  }
+
+  const baseScore = wpm * (accuracy / 100);
+  const difficultyAdjustment = 1000 / WordsPopularity;
+  return baseScore * difficultyAdjustment;
+};
+
+export function getSortFunction(sortColumn: string, sortDirection: string) {
+  return (a: any, b: any) => {
+    if (sortColumn in a && sortColumn in b) {
+      return sortDirection === "asc"
+        ? a[sortColumn] - b[sortColumn]
+        : b[sortColumn] - a[sortColumn];
+    }
+    return 0;
+  };
+}

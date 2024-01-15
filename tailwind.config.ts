@@ -78,6 +78,23 @@ module.exports = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      // scrollbar: (theme) => ({
+      //   DEFAULT: {
+      //     "&::-webkit-scrollbar": {
+      //       width: "8px",
+      //     },
+      //     "&::-webkit-scrollbar-track": {
+      //       backgroundColor: theme("colors.background"),
+      //     },
+      //     "&::-webkit-scrollbar-thumb": {
+      //       backgroundColor: theme("colors.foreground"),
+      //       borderRadius: "4px",
+      //       "&:hover": {
+      //         backgroundColor: theme("colors.primary.DEFAULT"),
+      //       },
+      //     },
+      //   },
+      // }),
     },
   },
   plugins: [require("tailwindcss-animate")],
