@@ -1,6 +1,16 @@
 import { useEffect } from "react";
 
+import { StatisticsChart } from "@/components/chart";
+import {
+  auth,
+  checkIfUserExists,
+  isHigherScore,
+  updateLeaderboard,
+  writeToLeaderboard,
+} from "@/firebase/firebase";
+import { calculateScore } from "@/lib/math";
 import { cn } from "@/lib/utils";
+import { useWordsPopularity } from "@/stores/preferences-store";
 import {
   useAccuracy,
   useActiveWordIndex,
@@ -8,13 +18,9 @@ import {
   useTypingActions,
   useWPM,
 } from "@/stores/typing-store";
-import { StatisticsChart } from "@/components/chart";
 import Leaderboard from "./leaderboard";
-import { writeToLeaderboard } from "@/firebase/firebase";
-import { auth } from "@/firebase/firebase";
-import { useWordsPopularity } from "@/stores/preferences-store";
 
-  //TODO : remove uploading on refresh/use update instead of write
+//TODO : remove uploading on refresh/use update instead of write
 
 interface StatisticsProps {
   userID: string;
@@ -36,20 +42,53 @@ export const Statistics = ({ userID }: StatisticsProps) => {
       }
     };
 
-    const userId = auth.currentUser?.uid;
-
-    writeToLeaderboard(
-      userId || "",
-      wpm ?? 0,
-      accuracy ?? 0,
-      duration ?? 0,
-      wordCount + 1,
-      popularity.toString()
-    );
-
     window.addEventListener("keydown", keydown);
     return () => window.removeEventListener("keydown", keydown);
   }, [reset]);
+
+  (async () => {
+    const userId = auth.currentUser?.uid;
+    if (!userId) {
+      console.log("No user ID found");
+      return;
+    }
+
+    const points = calculateScore(wpm, accuracy, popularity);
+    const userExists = await checkIfUserExists(userId);
+
+    console.log("User exists:", userExists, "User ID:", userId);
+
+    if (userExists) {
+      const isHigher = await isHigherScore(userId, points);
+      console.log("Is higher score:", isHigher);
+
+      if (isHigher) {
+        await updateLeaderboard(
+          userId ?? "",
+          wpm as number,
+          accuracy as number,
+          duration,
+          wordCount,
+          popularity.toString(),
+          points
+        );
+        console.log("You beat your high score!");
+      } else {
+        console.log("Try again to beat your high score!");
+      }
+    } else {
+      await writeToLeaderboard(
+        userId ?? "",
+        wpm as number,
+        accuracy as number,
+        duration,
+        wordCount,
+        popularity.toString(),
+        points
+      );
+      console.log("New high score!");
+    }
+  })();
 
   return (
     <div className="flex flex-col lg:grid grid-cols-12 grid-rows-12 gap-6">

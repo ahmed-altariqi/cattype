@@ -1,13 +1,16 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import {
-  getFirestore,
-  collection,
   addDoc,
+  collection,
   doc,
+  getDocs,
+  getFirestore,
+  onSnapshot,
+  query,
   setDoc,
-} from "firebase/firestore"; 
-import { getDocs } from "firebase/firestore"; 
+  where,
+} from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_API_KEY,
@@ -30,7 +33,8 @@ async function writeToLeaderboard(
   accuracy: number,
   timeTaken: number,
   wordCount: number,
-  WordsPopularity: string
+  WordsPopularity: string,
+  points: number
 ) {
   try {
     const leaderboardRef = collection(db, "leaderboard");
@@ -41,6 +45,7 @@ async function writeToLeaderboard(
       timeTaken,
       wordCount,
       WordsPopularity,
+      points,
     };
     await addDoc(leaderboardRef, data);
     console.log("Data written to leaderboard successfully!");
@@ -48,48 +53,91 @@ async function writeToLeaderboard(
     console.error("Error writing data to leaderboard:", error);
   }
 }
+
 async function updateLeaderboard(
   userID: string,
   wordsPerMin: number,
   accuracy: number,
   timeTaken: number,
   wordCount: number,
-  WordsPopularity: string
+  WordsPopularity: string,
+  points: number
 ) {
   try {
     const leaderboardRef = collection(db, "leaderboard");
-    const data = {
-      user: userID,
-      wordsPerMin,
-      accuracy,
-      timeTaken,
-      wordCount,
-      WordsPopularity,
-    };
-    await setDoc(doc(leaderboardRef, userID), data, { merge: true });
-    console.log("Data updated in leaderboard successfully!");
+    const q = query(leaderboardRef, where("user", "==", userID));
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      const docRef = doc(leaderboardRef, querySnapshot.docs[0].id);
+      const data = {
+        user: userID,
+        wordsPerMin,
+        accuracy,
+        timeTaken,
+        wordCount,
+        WordsPopularity,
+        points,
+      };
+      await setDoc(docRef, data, { merge: true });
+      console.log("Data updated in leaderboard successfully!");
+    } else {
+      console.log("No existing record found to update");
+    }
   } catch (error) {
     console.error("Error updating data in leaderboard:", error);
   }
 }
 
-async function readFromLeaderboard(userID: string) {
-  try {
-    const leaderboardRef = collection(db, "leaderboard");
-    const snapshot = await getDocs(leaderboardRef);
-    const leaderboardData: object[] = [];
-    snapshot.forEach((doc) => {
-      const data = doc.data();
-      data.userID = userID;
-      leaderboardData.push(data);
-    });
-    return leaderboardData;
-  } catch (error) {
-    console.error("Error reading data from leaderboard:", error);
-    return [];
-  }
+async function checkIfUserExists(userId: string) {
+  const leaderboardRef = collection(db, "leaderboard");
+  const q = query(leaderboardRef, where("user", "==", userId));
+  const querySnapshot = await getDocs(q);
+  return !querySnapshot.empty;
 }
 
-// async function getUserFromLeaderboard
+async function isHigherScore(userId: string, newPoints: number) {
+  const leaderboardRef = collection(db, "leaderboard");
+  const q = query(leaderboardRef, where("user", "==", userId));
+  const querySnapshot = await getDocs(q);
 
-export { app, auth, db, writeToLeaderboard, readFromLeaderboard, updateLeaderboard };
+  if (!querySnapshot.empty) {
+    const existingPoints = querySnapshot.docs[0].data().points;
+    return newPoints > existingPoints;
+  }
+
+  return false;
+}
+
+
+function subscribeToLeaderboard(callback: (data: object[]) => void) {
+  const leaderboardRef = collection(db, "leaderboard");
+  const q = query(leaderboardRef);
+
+  const unsubscribe = onSnapshot(
+    q,
+    (snapshot) => {
+      const leaderboardData: object[] = [];
+      snapshot.forEach((doc) => {
+        leaderboardData.push(doc.data());
+      });
+      callback(leaderboardData);
+    },
+    (error) => {
+      console.error("Error reading data from leaderboard:", error);
+    }
+  );
+
+  return unsubscribe;
+}
+
+export {
+  app,
+  auth,
+  checkIfUserExists,
+  db,
+  isHigherScore,
+  subscribeToLeaderboard,
+  updateLeaderboard,
+  writeToLeaderboard,
+};

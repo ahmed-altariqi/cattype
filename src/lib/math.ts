@@ -51,17 +51,17 @@ export const calculateElapsedSeconds = ({
   return Math.round((end - start) / 1000);
 };
 
-export const calculateScore = (item: any) => {
-  if (typeof item.wordsPerMin !== "number" || typeof item.accuracy !== "number" || typeof item.WordsPopularity !== "number") {
+export const calculateScore = (wpm: any, accuracy: any, WordsPopularity: any) => {
+  if (typeof wpm !== "number" || typeof accuracy !== "number" || typeof WordsPopularity !== "number") {
     return 0; // or some other default value
   }
 
-  if (item.WordsPopularity <= 0) {
+  if (wpm <= 0) {
     return 0; // Prevent division by zero or negative popularity
   }
 
-  const baseScore = item.wordsPerMin * (item.accuracy / 100);
-  const difficultyAdjustment = 1000 / item.WordsPopularity;
+  const baseScore = wpm * (accuracy / 100);
+  const difficultyAdjustment = 1000 / WordsPopularity;
   return baseScore * difficultyAdjustment;
 };
 

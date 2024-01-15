@@ -6,14 +6,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { readFromLeaderboard } from "@/firebase/firebase";
-import { calculateScore, getSortFunction } from "@/lib/math";
+import { subscribeToLeaderboard } from "@/firebase/firebase";
+import { getSortFunction } from "@/lib/math";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
+import "../index.css";
 import { ScrollArea } from "./ui/scroll-area";
-import '../index.css';
 
-// TODO : hide scroll bar
 interface LeaderboardItem {
   user: string;
   wordCount: number;
@@ -21,6 +20,7 @@ interface LeaderboardItem {
   WordsPopularity: number;
   wordsPerMin: number;
   timeTaken: number;
+  points: number;
 }
 interface LeaderboardProps {
   userID: string;
@@ -33,14 +33,20 @@ function Leaderboard({ userID }: LeaderboardProps) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await readFromLeaderboard(userID);
-      setLeaderboardData(data as LeaderboardItem[]);
+    const unsubscribe = subscribeToLeaderboard((newData) => {
+      setLeaderboardData(newData as LeaderboardItem[]);
       setIsLoading(false);
-    };
-    fetchData();
-  }, [userID]);
+    });
 
+    return () => unsubscribe();
+  }, []);
+
+  const sortedData = leaderboardData
+    .filter((item) => item.wordsPerMin && item.accuracy)
+    .map((item) => ({
+      ...item,
+    }))
+    .sort(getSortFunction(sortColumn, sortDirection));
   const handleSort = (column: string) => {
     if (sortColumn === column) {
       setSortDirection(sortDirection === "asc" ? "desc" : "asc");
@@ -49,24 +55,16 @@ function Leaderboard({ userID }: LeaderboardProps) {
       setSortDirection("asc");
     }
   };
-
-  const sortedData = leaderboardData
-    .filter((item) => item.wordsPerMin && item.accuracy)
-    .map((item) => ({
-      ...item,
-      score: calculateScore(item),
-    }))
-    .sort(getSortFunction(sortColumn, sortDirection));
-    
   return (
     <div className="flex flex-col py-5">
       <h1
         className={cn("text-left font-black text-4xl pt-6", "text-cat-primary")}
       >
         Leaderboard
-      </h1><p className="text-left text-sm py-2">
+      </h1>
+      <p className="text-left text-sm py-2">
         New high scores will update your existing record.
-        </p>
+      </p>
       {isLoading ? (
         <p className="text-center py-5">Loading...</p>
       ) : (
@@ -149,7 +147,7 @@ function Leaderboard({ userID }: LeaderboardProps) {
                     <TableCell>{item.timeTaken}s</TableCell>
                     <TableCell>{item.wordCount}</TableCell>
                     <TableCell>{item.WordsPopularity}</TableCell>
-                    <TableCell>{item.score.toFixed(0)}pts</TableCell>
+                    <TableCell>{item.points.toFixed(0)}pts</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -157,7 +155,6 @@ function Leaderboard({ userID }: LeaderboardProps) {
           </div>
         </ScrollArea>
       )}
-      
     </div>
   );
 }
