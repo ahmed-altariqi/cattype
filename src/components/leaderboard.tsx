@@ -58,8 +58,6 @@ function Leaderboard({ userID }: LeaderboardProps) {
   };
   return (
     <div className="flex flex-col py-5 select-none">
-
-
       <h1
         className={cn("text-left font-black text-4xl pt-6", "text-cat-primary")}
         onClick={() => {
@@ -149,7 +147,7 @@ function Leaderboard({ userID }: LeaderboardProps) {
                         item.user === userID
                           ? "text-cat-primary bg-muted/5"
                           : ""
-                      }`
+                      }`,
                     )}
                   >
                     <TableCell>{item.wordsPerMin}</TableCell>

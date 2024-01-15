@@ -30,8 +30,7 @@ export const Character = ({
   const isActiveWord = wordIndex === activeWordIndex;
   const isActiveCharacter = charIndex === activeCharacterIndex;
 
-  const isCorrectCharacter =
-    currentWord[charIndex]?.charStatus === "CORRECT";
+  const isCorrectCharacter = currentWord[charIndex]?.charStatus === "CORRECT";
   const isIncorrectCharacter =
     currentWord[charIndex]?.charStatus === "INCORRECT";
 
@@ -42,7 +41,7 @@ export const Character = ({
       className={cn(
         isActive && "text-cat-neutral",
         isCorrectCharacter && "text-cat-primary",
-        isIncorrectCharacter && "text-cat-error"
+        isIncorrectCharacter && "text-cat-error",
       )}
     >
       <span>{char}</span>

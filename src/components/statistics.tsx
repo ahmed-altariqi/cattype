@@ -16,11 +16,10 @@ import {
   useTypingActions,
   useWPM,
 } from "@/stores/typing-store";
-import confetti from 'canvas-confetti';
+import confetti from "canvas-confetti";
 import { useEffect } from "react";
 import Leaderboard from "./leaderboard";
 import { toast } from "./ui/use-toast";
-
 
 interface StatisticsProps {
   userID: string;
@@ -39,10 +38,10 @@ export const Statistics = ({ userID }: StatisticsProps) => {
     confetti({
       particleCount: 150,
       spread: 80,
-      origin: { y: 0.5 }
+      origin: { y: 0.5 },
     });
   };
-  
+
   useEffect(() => {
     const keydown = (e: KeyboardEvent) => {
       if (e.key === "Enter") {
@@ -78,14 +77,15 @@ export const Statistics = ({ userID }: StatisticsProps) => {
           duration,
           wordCount + 1,
           popularity.toString(),
-          points
+          points,
         );
         runConfetti();
       } else {
         toast({
           title: "Almost There!",
-          description: "you got " + points.toFixed(0) + " points, keep improving!",
-        })
+          description:
+            "you got " + points.toFixed(0) + " points, keep improving!",
+        });
       }
     } else {
       await uplaodRecord(
@@ -95,7 +95,7 @@ export const Statistics = ({ userID }: StatisticsProps) => {
         duration,
         wordCount + 1,
         popularity.toString(),
-        points
+        points,
       );
       runConfetti();
     }
@@ -135,7 +135,7 @@ export const Statistics = ({ userID }: StatisticsProps) => {
         <p
           className={cn(
             "justify-center text-center text-muted-foreground flex items-center gap-x-2 opacity-50 text-sm",
-            "text-textColor"
+            "text-textColor",
           )}
         >
           <span>Click </span>

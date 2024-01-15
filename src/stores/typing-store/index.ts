@@ -12,10 +12,10 @@ import { usePreferenceStore } from "@/stores/preferences-store";
 import { initializeTypingActions } from "@/stores/typing-store/actions";
 
 const initializeWordListCharacterStatus = (
-  words: string[]
+  words: string[],
 ): WordListCharAndStatus =>
   words.map((word) =>
-    word.split("").map((char) => ({ char, charStatus: "INACTIVE" }))
+    word.split("").map((char) => ({ char, charStatus: "INACTIVE" })),
   );
 
 export const initializeTypingState = (): TypingState => {
@@ -44,12 +44,10 @@ export const initializeTypingState = (): TypingState => {
   };
 };
 
-export const typingStore = create<TypingState & TypingActions>(
-  (set) => ({
-    ...initializeTypingState(),
-    ...initializeTypingActions(set),
-  })
-);
+export const typingStore = create<TypingState & TypingActions>((set) => ({
+  ...initializeTypingState(),
+  ...initializeTypingActions(set),
+}));
 
 export const useWords = () => typingStore((state) => state.words);
 export const useStatus = () => typingStore((state) => state.status);
@@ -64,14 +62,11 @@ export const useWordListCharAndStatus = () =>
 export const useMistakesCount = () =>
   typingStore((state) => state.mistakesCount);
 
-export const useAccuracy = () =>
-  typingStore((state) => state.accuracy);
+export const useAccuracy = () => typingStore((state) => state.accuracy);
 export const useWPM = () => typingStore((state) => state.wpm);
 export const useDuration = () =>
   typingStore((state) => state.durationInSeconds);
 
-export const useChartPoints = () =>
-  typingStore((state) => state.charPoints);
+export const useChartPoints = () => typingStore((state) => state.charPoints);
 
-export const useTypingActions = () =>
-  typingStore((state) => state.actions);
+export const useTypingActions = () => typingStore((state) => state.actions);

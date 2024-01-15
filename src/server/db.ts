@@ -34,7 +34,7 @@ async function uplaodRecord(
   timeTaken: number,
   wordCount: number,
   WordsPopularity: string,
-  points: number
+  points: number,
 ) {
   try {
     const leaderboardRef = collection(db, "leaderboard");
@@ -61,7 +61,7 @@ async function updateExistingRecord(
   timeTaken: number,
   wordCount: number,
   WordsPopularity: string,
-  points: number
+  points: number,
 ) {
   try {
     const leaderboardRef = collection(db, "leaderboard");
@@ -109,7 +109,6 @@ async function isHigherScore(userId: string, newPoints: number) {
   return false;
 }
 
-
 function readLeaderboard(callback: (data: object[]) => void) {
   const leaderboardRef = collection(db, "leaderboard");
   const q = query(leaderboardRef);
@@ -125,7 +124,7 @@ function readLeaderboard(callback: (data: object[]) => void) {
     },
     (error) => {
       console.error("Error reading data from leaderboard:", error);
-    }
+    },
   );
 
   return unsubscribe;

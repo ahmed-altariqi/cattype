@@ -14,7 +14,6 @@ import { auth } from "@/server/db";
 import { signInAnonymously } from "firebase/auth";
 import { useEffect } from "react";
 
-
 const App = () => {
   const status = useStatus();
   const { themeClassName } = useTheme();
@@ -46,24 +45,29 @@ const App = () => {
   }, []);
 
   return (
-      <div className={cn("bg-cat-background text-cat-muted overflow-hidden", themeClassName)}>
-        <div className="container pt-10 h-screen">
-          <div className="max-w-7xl flex flex-col md:px-40 min-h-screen text-2xl font-bold">
-            <div className="flex items-center justify-between">
-              <Logo />
-              <PreferencesModal />
-            </div>
-            <div className="pt-10">
-              {status === "done" ? (
-                <Statistics userID={userID} />
-              ) : (
-                <TypingArea />
-              )}
-            </div>
+    <div
+      className={cn(
+        "bg-cat-background text-cat-muted overflow-hidden",
+        themeClassName,
+      )}
+    >
+      <div className="container pt-10 h-screen">
+        <div className="max-w-7xl flex flex-col md:px-40 min-h-screen text-2xl font-bold">
+          <div className="flex items-center justify-between">
+            <Logo />
+            <PreferencesModal />
           </div>
-          <Toaster />
+          <div className="pt-10">
+            {status === "done" ? (
+              <Statistics userID={userID} />
+            ) : (
+              <TypingArea />
+            )}
+          </div>
         </div>
+        <Toaster />
       </div>
+    </div>
   );
 };
 

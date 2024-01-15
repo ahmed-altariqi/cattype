@@ -28,7 +28,7 @@ export const themes = {
   cyan: {
     themeClassName: "theme-cyan",
     primaryColor: "180, 100%, 61.8%",
-  }
+  },
 };
 
 export const getThemeClassNameAndPrimaryColor = (name: ThemeName) => {

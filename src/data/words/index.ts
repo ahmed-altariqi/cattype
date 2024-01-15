@@ -15,7 +15,7 @@ export const randomizedWords = ({
 
   const words = Array.from(
     { length: wordCount },
-    () => wordList[Math.floor(Math.random() * wordList.length)]
+    () => wordList[Math.floor(Math.random() * wordList.length)],
   );
 
   return words;

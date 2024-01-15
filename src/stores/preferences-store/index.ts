@@ -1,16 +1,11 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-import {
-  PreferenceActions,
-  PreferenceState,
-} from "@/types/preferences-types";
+import { PreferenceActions, PreferenceState } from "@/types/preferences-types";
 
 import { getThemeClassNameAndPrimaryColor } from "@/data/themes";
 
-export const usePreferenceStore = create<
-  PreferenceState & PreferenceActions
->()(
+export const usePreferenceStore = create<PreferenceState & PreferenceActions>()(
   persist(
     (set) => ({
       wordCount: 10,
@@ -43,16 +38,12 @@ export const usePreferenceStore = create<
         theme: state.theme,
         textPosition: state.textPosition,
       }),
-    }
-  )
+    },
+  ),
 );
 
-export const useWordCount = () =>
-  usePreferenceStore((s) => s.wordCount);
-export const useWordsPopularity = () =>
-  usePreferenceStore((s) => s.popularity);
+export const useWordCount = () => usePreferenceStore((s) => s.wordCount);
+export const useWordsPopularity = () => usePreferenceStore((s) => s.popularity);
 export const useTheme = () => usePreferenceStore((s) => s.theme);
-export const usePreferenceActions = () =>
-  usePreferenceStore((s) => s.actions);
-export const useTextPosition = () =>
-  usePreferenceStore((s) => s.textPosition);
+export const usePreferenceActions = () => usePreferenceStore((s) => s.actions);
+export const useTextPosition = () => usePreferenceStore((s) => s.textPosition);

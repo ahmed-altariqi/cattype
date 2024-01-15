@@ -11,10 +11,7 @@ import {
   calculateWPM,
 } from "@/lib/math";
 
-import {
-  initializeTypingState,
-  typingStore,
-} from "@/stores/typing-store";
+import { initializeTypingState, typingStore } from "@/stores/typing-store";
 
 const ONE_SECOND_INTERVAL = 1000;
 
@@ -26,8 +23,8 @@ type Set = (
     | ((
         state:
           | (TypingState & TypingActions)
-          | Partial<TypingState & TypingActions>
-      ) => TypingState & TypingActions)
+          | Partial<TypingState & TypingActions>,
+      ) => TypingState & TypingActions),
 ) => void;
 
 export const initializeTypingActions = (set: Set): TypingActions => {
@@ -37,7 +34,7 @@ export const initializeTypingActions = (set: Set): TypingActions => {
     // Set up a recurring interval to update chart data points every second
     const intervalRef = setInterval(
       actions.updateChartDataPoints,
-      ONE_SECOND_INTERVAL
+      ONE_SECOND_INTERVAL,
     );
 
     set({
@@ -155,8 +152,7 @@ export const initializeTypingActions = (set: Set): TypingActions => {
 
     // Get the current word and its characters and status
     const currentWord = words[activeWordIndex];
-    const currentCharactersAndStatus =
-      wordListCharAndStatus[activeWordIndex];
+    const currentCharactersAndStatus = wordListCharAndStatus[activeWordIndex];
 
     // Handle backspace key press
     const isBackspace = key === "Backspace";
@@ -173,8 +169,7 @@ export const initializeTypingActions = (set: Set): TypingActions => {
 
     // Check if the pressed key is correct and if a space should be clicked to jump to the next word
     const isCorrectKey = key === currentWord[activeCharacterIndex];
-    const shouldClickSpace =
-      activeCharacterIndex === currentWord.length;
+    const shouldClickSpace = activeCharacterIndex === currentWord.length;
 
     // Handle key press based on whether a space should be clicked
     if (shouldClickSpace) {
@@ -224,10 +219,7 @@ export const initializeTypingActions = (set: Set): TypingActions => {
       set({
         activeWordIndex: activeWordIndex + 1,
         activeCharacterIndex: 0,
-        chartPointTypedWords: [
-          ...chartPointTypedWords,
-          words[activeWordIndex],
-        ],
+        chartPointTypedWords: [...chartPointTypedWords, words[activeWordIndex]],
       });
     } else {
       set({
@@ -242,13 +234,8 @@ export const initializeTypingActions = (set: Set): TypingActions => {
     return;
   };
 
-  const handleNonSpaceKey = ({
-    isCorrectKey,
-  }: {
-    isCorrectKey: boolean;
-  }) => {
-    const { mistakesCount, chartPointMistakeCount } =
-      typingStore.getState();
+  const handleNonSpaceKey = ({ isCorrectKey }: { isCorrectKey: boolean }) => {
+    const { mistakesCount, chartPointMistakeCount } = typingStore.getState();
 
     if (isCorrectKey) {
       set({
@@ -273,8 +260,7 @@ export const initializeTypingActions = (set: Set): TypingActions => {
 
     const isLastWord = activeWordIndex === words.length - 1;
     const isLastCharacter =
-      isLastWord &&
-      activeCharacterIndex === words[activeWordIndex].length;
+      isLastWord && activeCharacterIndex === words[activeWordIndex].length;
 
     // Finish the test if it's the last character of the last word
     if (isLastCharacter) {
@@ -291,11 +277,8 @@ export const initializeTypingActions = (set: Set): TypingActions => {
     charStatus: "INACTIVE" | "CORRECT" | "INCORRECT";
     isBackspace?: boolean;
   }): WordListCharAndStatus => {
-    const {
-      wordListCharAndStatus,
-      activeWordIndex,
-      activeCharacterIndex,
-    } = typingStore.getState();
+    const { wordListCharAndStatus, activeWordIndex, activeCharacterIndex } =
+      typingStore.getState();
 
     return wordListCharAndStatus.map((word, wordIndex) => {
       return char && wordIndex === activeWordIndex

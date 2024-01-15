@@ -20,11 +20,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 
-type Preferences =
-  | ThemeName
-  | WordCount
-  | WordsPopularity
-  | TextPosition;
+type Preferences = ThemeName | WordCount | WordsPopularity | TextPosition;
 
 type ButtonConfig = {
   text: string | number;
@@ -114,9 +110,7 @@ export const PreferencesModal = () => {
     },
     wordPopularity: {
       title: "Words Popularity",
-      clickHandler: changeWordPopularity as (
-        value: Preferences
-      ) => void,
+      clickHandler: changeWordPopularity as (value: Preferences) => void,
       toastDescription: "Successfully set words popularity to ",
       buttons: [
         {
@@ -143,9 +137,7 @@ export const PreferencesModal = () => {
     },
     textPosition: {
       title: "Text Position",
-      clickHandler: changeTextPosition as (
-        value: Preferences
-      ) => void,
+      clickHandler: changeTextPosition as (value: Preferences) => void,
       toastDescription: "Successfully set text to ",
       buttons: [
         { text: "left", value: "left" },
@@ -192,7 +184,7 @@ export const PreferencesModal = () => {
                   className="h-2 w-2 rounded-full"
                   style={{
                     background: `hsl(${getThemePrimaryColor(
-                      value as ThemeName
+                      value as ThemeName,
                     )})`,
                   }}
                 ></span>
