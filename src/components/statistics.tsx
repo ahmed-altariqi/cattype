@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-
 import { StatisticsChart } from "@/components/chart";
 import {
   auth,
@@ -18,7 +16,10 @@ import {
   useTypingActions,
   useWPM,
 } from "@/stores/typing-store";
+import confetti from 'canvas-confetti';
+import { useEffect } from "react";
 import Leaderboard from "./leaderboard";
+import { toast } from "./ui/use-toast";
 
 //TODO : remove uploading on refresh/use update instead of write
 
@@ -35,6 +36,14 @@ export const Statistics = ({ userID }: StatisticsProps) => {
 
   const { reset } = useTypingActions();
 
+  const runConfetti = () => {
+    confetti({
+      particleCount: 150,
+      spread: 80,
+      origin: { y: 0.5 }
+    });
+  };
+  
   useEffect(() => {
     const keydown = (e: KeyboardEvent) => {
       if (e.key === "Enter") {
@@ -56,11 +65,11 @@ export const Statistics = ({ userID }: StatisticsProps) => {
     const points = calculateScore(wpm, accuracy, popularity);
     const userExists = await checkIfUserExists(userId);
 
-    console.log("User exists:", userExists, "User ID:", userId);
+    console.log("User exists:", userExists);
 
     if (userExists) {
       const isHigher = await isHigherScore(userId, points);
-      console.log("Is higher score:", isHigher);
+      console.log("Is higher score:", isHigher, points);
 
       if (isHigher) {
         await updateLeaderboard(
@@ -72,9 +81,12 @@ export const Statistics = ({ userID }: StatisticsProps) => {
           popularity.toString(),
           points
         );
-        console.log("You beat your high score!");
+        runConfetti();
       } else {
-        console.log("Try again to beat your high score!");
+        toast({
+          title: "Almost There!",
+          description: "you got " + points.toFixed(0) + " points, keep improving!",
+        })
       }
     } else {
       await writeToLeaderboard(
@@ -86,7 +98,7 @@ export const Statistics = ({ userID }: StatisticsProps) => {
         popularity.toString(),
         points
       );
-      console.log("New high score!");
+      runConfetti();
     }
   })();
 

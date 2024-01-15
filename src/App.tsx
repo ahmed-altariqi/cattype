@@ -36,7 +36,6 @@ const App = () => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         setUserID(user.uid);
-        console.log("User is signed in:", userID);
       } else {
         console.log("User is signed out");
         setUserID("");
