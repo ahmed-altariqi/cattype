@@ -7,7 +7,7 @@ export const themes = {
   },
   blue: {
     themeClassName: "theme-blue",
-    primaryColor: "221.2, 100%, 70%",
+    primaryColor: "216.34, 94.67%, 85.29%",
   },
   violet: {
     themeClassName: "theme-violet",
@@ -28,7 +28,7 @@ export const themes = {
   cyan: {
     themeClassName: "theme-cyan",
     primaryColor: "180, 100%, 61.8%",
-  },
+  }
 };
 
 export const getThemeClassNameAndPrimaryColor = (name: ThemeName) => {

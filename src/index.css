@@ -45,9 +45,9 @@
 
   .theme-blue {
     --backgroundColor: hsl(0, 0%, 0%);
-    --mutedColor: hsla(219, 12%, 63%, 0.784);
+    --mutedColor: hsla(219, 6%, 45%, 0.784);
     --neutralColor: #ffffff;
-    --primaryColor: hsl(221.2, 100%, 70%);
+    --primaryColor: hsl(216.34, 94.67%, 85.29%);
     --errorColor: hsl(0, 100%, 69.8%);
   }
 

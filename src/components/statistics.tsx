@@ -1,11 +1,11 @@
 import { StatisticsChart } from "@/components/chart";
 import {
   auth,
-  checkIfUserExists,
+  doesUserExists,
   isHigherScore,
-  updateLeaderboard,
-  writeToLeaderboard,
-} from "@/firebase/firebase";
+  updateExistingRecord,
+  uplaodRecord,
+} from "@/server/db";
 import { calculateScore } from "@/lib/math";
 import { cn } from "@/lib/utils";
 import { useWordsPopularity } from "@/stores/preferences-store";
@@ -21,7 +21,6 @@ import { useEffect } from "react";
 import Leaderboard from "./leaderboard";
 import { toast } from "./ui/use-toast";
 
-//TODO : remove uploading on refresh/use update instead of write
 
 interface StatisticsProps {
   userID: string;
@@ -63,7 +62,7 @@ export const Statistics = ({ userID }: StatisticsProps) => {
     }
 
     const points = calculateScore(wpm, accuracy, popularity);
-    const userExists = await checkIfUserExists(userId);
+    const userExists = await doesUserExists(userId);
 
     console.log("User exists:", userExists);
 
@@ -72,12 +71,12 @@ export const Statistics = ({ userID }: StatisticsProps) => {
       console.log("Is higher score:", isHigher, points);
 
       if (isHigher) {
-        await updateLeaderboard(
+        await updateExistingRecord(
           userId ?? "",
           wpm as number,
           accuracy as number,
           duration,
-          wordCount,
+          wordCount + 1,
           popularity.toString(),
           points
         );
@@ -89,12 +88,12 @@ export const Statistics = ({ userID }: StatisticsProps) => {
         })
       }
     } else {
-      await writeToLeaderboard(
+      await uplaodRecord(
         userId ?? "",
         wpm as number,
         accuracy as number,
         duration,
-        wordCount,
+        wordCount + 1,
         popularity.toString(),
         points
       );
@@ -145,7 +144,7 @@ export const Statistics = ({ userID }: StatisticsProps) => {
           </kbd>{" "}
           <span>to go the next test.</span>
         </p>
-        <Leaderboard userID={userID as any} />
+        <Leaderboard userID={userID as string} />
       </div>
     </div>
   );

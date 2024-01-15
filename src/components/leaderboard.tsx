@@ -6,9 +6,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { subscribeToLeaderboard } from "@/firebase/firebase";
 import { getSortFunction } from "@/lib/math";
 import { cn } from "@/lib/utils";
+import { readLeaderboard } from "@/server/db";
+import { RotateCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import "../index.css";
 import { ScrollArea } from "./ui/scroll-area";
@@ -33,7 +34,7 @@ function Leaderboard({ userID }: LeaderboardProps) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = subscribeToLeaderboard((newData) => {
+    const unsubscribe = readLeaderboard((newData) => {
       setLeaderboardData(newData as LeaderboardItem[]);
       setIsLoading(false);
     });
@@ -56,11 +57,20 @@ function Leaderboard({ userID }: LeaderboardProps) {
     }
   };
   return (
-    <div className="flex flex-col py-5">
+    <div className="flex flex-col py-5 select-none">
+
+
       <h1
         className={cn("text-left font-black text-4xl pt-6", "text-cat-primary")}
+        onClick={() => {
+          setSortColumn("");
+          setSortDirection("asc");
+        }}
       >
-        Leaderboard
+        Leaderboard{" "}
+        {sortColumn && (
+          <RotateCw className="inline-block  text-cat-primary cursor-pointer" />
+        )}
       </h1>
       <p className="text-left text-sm py-2">
         New high scores will update your existing record.
@@ -74,7 +84,7 @@ function Leaderboard({ userID }: LeaderboardProps) {
               <TableHeader>
                 <TableRow>
                   <TableHead
-                    className="w-[68px]  text-center"
+                    className="w-[68px] gap-0 text-center cursor-pointer"
                     onClick={() => handleSort("wordsPerMin")}
                   >
                     WPM{" "}
@@ -83,7 +93,7 @@ function Leaderboard({ userID }: LeaderboardProps) {
                     )}
                   </TableHead>
                   <TableHead
-                    className="w-[50px]  text-center "
+                    className="w-[50px]  text-center cursor-pointer "
                     onClick={() => handleSort("accuracy")}
                   >
                     Accuracy{" "}
@@ -92,7 +102,7 @@ function Leaderboard({ userID }: LeaderboardProps) {
                     )}
                   </TableHead>
                   <TableHead
-                    className="w-[50px] text-center"
+                    className="w-[50px] text-center cursor-pointer"
                     onClick={() => handleSort("timeTaken")}
                   >
                     Time{" "}
@@ -101,7 +111,7 @@ function Leaderboard({ userID }: LeaderboardProps) {
                     )}
                   </TableHead>
                   <TableHead
-                    className="w-[50px] text-center"
+                    className="w-[50px] text-center cursor-pointer"
                     onClick={() => handleSort("wordCount")}
                   >
                     Words{" "}
@@ -110,7 +120,7 @@ function Leaderboard({ userID }: LeaderboardProps) {
                     )}
                   </TableHead>
                   <TableHead
-                    className="w-[50px] text-center"
+                    className="w-[50px] text-center cursor-pointer"
                     onClick={() => handleSort("WordsPopularity")}
                   >
                     Popularity{" "}
@@ -119,11 +129,11 @@ function Leaderboard({ userID }: LeaderboardProps) {
                     )}
                   </TableHead>
                   <TableHead
-                    className="w-[50px] text-center"
-                    onClick={() => handleSort("score")}
+                    className="w-[50px] text-center cursor-pointer"
+                    onClick={() => handleSort("points")}
                   >
                     Score{" "}
-                    {sortColumn === "score" && (
+                    {sortColumn === "points" && (
                       <span>{sortDirection === "asc" ? "▼" : "▲"}</span>
                     )}
                   </TableHead>
@@ -133,9 +143,9 @@ function Leaderboard({ userID }: LeaderboardProps) {
               <TableBody>
                 {sortedData.map((item) => (
                   <TableRow
-                    key={userID}
+                    key={item.user}
                     className={cn(
-                      `text-center ${
+                      `text-center  ${
                         item.user === userID
                           ? "text-cat-primary bg-muted/5"
                           : ""

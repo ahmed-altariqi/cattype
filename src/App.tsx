@@ -10,7 +10,7 @@ import { Statistics } from "@/components/statistics";
 import { TypingArea } from "@/components/typing-area";
 import { Toaster } from "@/components/ui/toaster";
 
-import { auth } from "@/firebase/firebase";
+import { auth } from "@/server/db";
 import { signInAnonymously } from "firebase/auth";
 import { useEffect } from "react";
 

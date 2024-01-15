@@ -27,7 +27,7 @@ const auth = getAuth(app);
 
 const db = getFirestore(app);
 
-async function writeToLeaderboard(
+async function uplaodRecord(
   user: string,
   wordsPerMin: number,
   accuracy: number,
@@ -54,7 +54,7 @@ async function writeToLeaderboard(
   }
 }
 
-async function updateLeaderboard(
+async function updateExistingRecord(
   userID: string,
   wordsPerMin: number,
   accuracy: number,
@@ -89,7 +89,7 @@ async function updateLeaderboard(
   }
 }
 
-async function checkIfUserExists(userId: string) {
+async function doesUserExists(userId: string) {
   const leaderboardRef = collection(db, "leaderboard");
   const q = query(leaderboardRef, where("user", "==", userId));
   const querySnapshot = await getDocs(q);
@@ -110,7 +110,7 @@ async function isHigherScore(userId: string, newPoints: number) {
 }
 
 
-function subscribeToLeaderboard(callback: (data: object[]) => void) {
+function readLeaderboard(callback: (data: object[]) => void) {
   const leaderboardRef = collection(db, "leaderboard");
   const q = query(leaderboardRef);
 
@@ -134,10 +134,10 @@ function subscribeToLeaderboard(callback: (data: object[]) => void) {
 export {
   app,
   auth,
-  checkIfUserExists,
+  doesUserExists,
   db,
   isHigherScore,
-  subscribeToLeaderboard,
-  updateLeaderboard,
-  writeToLeaderboard,
+  readLeaderboard,
+  updateExistingRecord,
+  uplaodRecord,
 };
